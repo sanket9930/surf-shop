@@ -1,28 +1,59 @@
 const createError = require('http-errors');
 const express = require('express');
+const favicon = require('serve-favicon');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+//const bodyParser = require('body-parser');
+const passport = require('passport');
+const User = require('./models/user');
+const session = require('express-session');
+const mongoose = require('mongoose');
 
+// requiring routes
 const indexs = require('./routes/indexs');
 const posts = require('./routes/posts');
 const reviews = require('./routes/reviews');
 
 const app = express();
 
+//  connecting to mongoDB database
+mongoose.connect('mongodb+srv://Sanket:sanket@surf-shop.snbyqbb.mongodb.net/test');
+const db = mongoose.connection;
+db.on('error',console.error.bind(console, 'Connection Error!!'));
+db.on('open',()=>{
+  console.log("connected");
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+//  Uncomment after placing favicon in /public
+//app.use(favicon(patj.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//  Configure Passpost and Sessions
+app.use(session({
+  secret : 'sanket 123',
+  resave : false,
+  saveUninitialized : true
+}));
+
+passport.use(User.createStrategy());    //Passport
+
+passport.serializeUser(User.serializeUser());   
+passport.deserializeUser(User.deserializeUser());
+
+//  Mount Routes
 app.use('/', indexs);
 app.use('/posts', posts);
 app.use('/posts/:id/reviews', reviews);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
