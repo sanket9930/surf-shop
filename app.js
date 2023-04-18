@@ -19,6 +19,7 @@ const app = express();
 
 //  connecting to mongoDB database
 mongoose.connect('mongodb+srv://Sanket:sanket@surf-shop.snbyqbb.mongodb.net/test');
+
 const db = mongoose.connection;
 db.on('error',console.error.bind(console, 'Connection Error!!'));
 db.on('open',()=>{
@@ -43,9 +44,10 @@ app.use(session({
   resave : false,
   saveUninitialized : true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(User.createStrategy());    //Passport
-
 passport.serializeUser(User.serializeUser());   
 passport.deserializeUser(User.deserializeUser());
 
