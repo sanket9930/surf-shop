@@ -6,9 +6,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 //const bodyParser = require('body-parser');
 const passport = require('passport');
-const User = require('./models/user');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const User = require('./models/user');
 
 // requiring routes
 const indexs = require('./routes/indexs');
@@ -18,7 +18,7 @@ const reviews = require('./routes/reviews');
 const app = express();
 
 //  connecting to mongoDB database
-mongoose.connect('mongodb+srv://Sanket:sanket@surf-shop.snbyqbb.mongodb.net/test');
+mongoose.connect('mongodb://127.0.0.1:27017');
 
 const db = mongoose.connection;
 db.on('error',console.error.bind(console, 'Connection Error!!'));
@@ -27,7 +27,7 @@ db.on('open',()=>{
 })
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));      
 app.set('view engine', 'ejs');
 
 //  Uncomment after placing favicon in /public
@@ -44,6 +44,7 @@ app.use(session({
   resave : false,
   saveUninitialized : true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 

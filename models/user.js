@@ -3,9 +3,9 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema= new Schema({
-    email : String,
+    email : String,                 
     image : String,
-    posts : [
+    posts : [                       //  one to many relationship    
         {
             type : Schema.Types.ObjectId,
             ref : 'Post'

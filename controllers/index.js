@@ -10,7 +10,6 @@ module.exports = {
             email: req.body.email,
             image: req.body.image 
         }
-
         await User.register(new User(newUser), req.body.password);
         res.redirect('/');
     },

@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
     title : String,
-    description : String,
     price : String,
-    image : [String],
+    description : String,
+    image : [ String ],
     location : String,
     lat : Number,
     lng : Number,
@@ -16,21 +16,8 @@ const PostSchema = new Schema({
     },
     reviews : [{
         type : Schema.Types.ObjectId,
-        ref : 'review'
+        ref : 'Review'
     }]
 });
 
-module.export = mongoose.model('Post', PostSchema);
-
-/*
-Post :
-title - string
-description - string
-price - string
-image - array of string         ->(could be multiple image on a single post)
-location - string
-lat - number
-lng - number
-author - object id(ref User)    ->(single author for a post)
-review - array object           ->(multiple reviews on single post)
-*/
+module.exports = mongoose.model('Post', PostSchema);
