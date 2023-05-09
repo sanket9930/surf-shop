@@ -1,3 +1,4 @@
+require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const favicon = require('serve-favicon');
@@ -9,6 +10,7 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const User = require('./models/user');
+const methodOverride = require('method-override');
 
 // requiring routes
 const indexs = require('./routes/indexs');
@@ -34,9 +36,10 @@ app.set('view engine', 'ejs');
 //app.use(favicon(patj.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 //  Configure Passpost and Sessions
 app.use(session({
