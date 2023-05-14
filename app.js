@@ -20,7 +20,7 @@ const reviews = require('./routes/reviews');
 const app = express();
 
 //  connecting to mongoDB database
-mongoose.connect('mongodb://127.0.0.1:27017');
+mongoose.connect('mongodb://127.0.0.1:27017/mapbox');
 
 const db = mongoose.connection;
 db.on('error',console.error.bind(console, 'Connection Error!!'));
@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+app.use(express.static('public'));
 
 //  Configure Passpost and Sessions
 app.use(session({

@@ -30,7 +30,7 @@ router.get('/:id', postShow);
 router.get('/:id/edit', postEdit);
 
 // PUT update post index /posts/new //
-router.put('/:id', postUpdate);
+router.put('/:id', upload.array('images', 4), postUpdate);
 
 //DELETE post /posts/:id //
 router.delete('/:id', postDestroy)
