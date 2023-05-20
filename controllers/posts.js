@@ -1,6 +1,7 @@
 require('dotenv').config();
 const Post = require("../models/post");
 
+
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: process.env.TOKEN });
 
@@ -12,8 +13,11 @@ cloudinary.config({
 });
 
 module.exports = {
+  
+
   // posts index
   async postIndex(req, res, next) {
+    
     let posts = await Post.find({});
     res.render("posts/index", { posts });
   },
@@ -41,6 +45,7 @@ module.exports = {
     }).send();
     req.body.post.coordinates = response.body.features[0].geometry.coordinates;
     let posts = await Post.create(req.body.post);
+    req.session.success = 'Post Created';
     res.redirect(`/posts/${posts.id}`);
   },
 
@@ -53,7 +58,7 @@ module.exports = {
   // Post Edit
   async postEdit(req, res, next) {
     let post = await Post.findById(req.params.id);
-    // post.id = req.params.id;
+    post.id = req.params.id;
     res.render("posts/edit", { post });
   },
 
@@ -125,3 +130,6 @@ module.exports = {
     res.redirect("/posts");
   },
 };
+
+
+

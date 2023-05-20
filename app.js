@@ -1,6 +1,7 @@
 require('dotenv').config();
-const createError = require('http-errors');
 const express = require('express');
+const engine = require('ejs-mate');
+const createError = require('http-errors');
 const favicon = require('serve-favicon');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -28,19 +29,21 @@ db.on('open',()=>{
   console.log("connected");
 })
 
+// use ejs-locals for all ejs templates
+app.engine('ejs', engine);
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));      
+app.set('views', path.join(__dirname, 'views'));    //  Anytime we do res.render() we are looking for .ejs file in views folder.   
 app.set('view engine', 'ejs');
 
 //  Uncomment after placing favicon in /public
-//app.use(favicon(patj.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
 app.use(express.static('public'));
+//app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 //  Configure Passpost and Sessions
 app.use(session({
@@ -56,6 +59,16 @@ passport.use(User.createStrategy());    //Passport
 passport.serializeUser(User.serializeUser());   
 passport.deserializeUser(User.deserializeUser());
 
+//  Set local variable pre-route middleware (before routing logic)
+app.use((req, res, next) => {
+  res.locals.title = "Surf Shop";
+  res.locals.success = req.session.success || '';
+  delete req.session.success;
+  res.locals.error = req.session.error || '';
+  delete req.session.error;
+  next();
+});
+
 //  Mount Routes
 app.use('/', indexs);
 app.use('/posts', posts);
@@ -70,12 +83,16 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // // render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
+
+  console.log(err);
+  req.session.error = err.message;  
+  res.redirect('back');
 });
 
 module.exports = app;
