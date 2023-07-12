@@ -1,9 +1,17 @@
-    body { margin: 0; padding: 0; }
-    #map { width: 800px; height: 700px; }
+
+    #map { 
+        width: 800px; 
+        height: 700px; 
+    }
+
     .marker{
         background-image: url('/images/red.png');
         width: 20px;
         height: 30px;
         cursor: pointer;
         border-radius: 5px;
+    }
+
+    .edit-review-form{
+        display: none;
     }

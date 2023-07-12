@@ -1,10 +1,17 @@
 <% layout('/layouts/boilerplate') -%>
 <h1>Index View</h1>
 
-<% posts.forEach(post => { %>
+<div><%- include ('../partials/pagePartial') -%></div> 
+
+<!-- post.docs contains data per page instead of complete data at once-->
+<% posts.docs.forEach(post => { %>
     <h3>Title : <%= post.title  %></h3>
     <div><%= post.description  %></div>
     <div><%= post.price %>$</div>
     <div><%= post.location  %></div>
     <a href="/posts/<%= post.id %>">view more</a>
 <% }) %>
+
+<div><%- include ('../partials/pagePartial') -%></div> 
+
+

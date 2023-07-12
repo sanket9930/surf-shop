@@ -12,6 +12,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 const methodOverride = require('method-override');
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 // requiring routes
 const indexs = require('./routes/indexs');
@@ -21,7 +23,7 @@ const reviews = require('./routes/reviews');
 const app = express();
 
 //  connecting to mongoDB database
-mongoose.connect('mongodb://127.0.0.1:27017/mapbox');
+mongoose.connect('mongodb://127.0.0.1:27017/surf-shop');
 
 const db = mongoose.connection;
 db.on('error',console.error.bind(console, 'Connection Error!!'));
@@ -61,6 +63,16 @@ passport.deserializeUser(User.deserializeUser());
 
 //  Set local variable pre-route middleware (before routing logic)
 app.use((req, res, next) => {
+  //  Setting req.user manually, otherwise would be done by passpost
+  req.user = {
+    '_id': '646afaf2d5b268e08800fcce', 
+    'username': 'sanket'
+
+    // '_id': '646c5e308ca95a3819e0cb75',
+    // 'username': 'TadanoHito'
+  }
+  //  All the views uses current User property of req.locals to know the current User, so 
+  res.locals.currentUser = req.user;
   res.locals.title = "Surf Shop";
   res.locals.success = req.session.success || '';
   delete req.session.success;

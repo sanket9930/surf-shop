@@ -18,7 +18,11 @@ module.exports = {
   // posts index
   async postIndex(req, res, next) {
     
-    let posts = await Post.find({});
+    let posts = await Post.paginate({}, {
+      page: req.query.page || 1,
+      limit: 10
+    });
+    posts.page = Number(posts.page);
     res.render("posts/index", { posts });
   },
   
@@ -45,13 +49,23 @@ module.exports = {
     }).send();
     req.body.post.coordinates = response.body.features[0].geometry.coordinates;
     let posts = await Post.create(req.body.post);
-    req.session.success = 'Post Created';
+    req.session.success = "POst Created Successfully";
     res.redirect(`/posts/${posts.id}`);
   },
 
   // Post Show
   async postShow(req, res, next) {
-    let post = await Post.findById(req.params.id);
+    // Whenever in the schema of one collection we provide a reference (in any field) to a document from any other collection, we need a populate() method to fill the field with that document.
+    let post = await Post.findById(req.params.id).
+    populate({
+      path: 'reviews', // Populationg the reviews of the post, Post - Review 1 level
+      options : { sort : { '_id' : -1 }},
+      populate : {   // Populating author of the review(need to go n review to find the author), Review to User 2 level
+        path: 'author',
+        model: 'User'
+      }
+    });
+    
     res.render("posts/show", { post });
   },
 
@@ -117,6 +131,7 @@ module.exports = {
     //    save the updated post into the db
     post.save();
     //    redirect to show page of the post
+    req.session.success = "POst Updated Successfully";
     res.redirect(`/posts/${post.id}`);
   },
 
@@ -127,6 +142,7 @@ module.exports = {
       await cloudinary.v2.uploader.destroy(image.public_id);
     }
     await post.deleteOne();
+    req.session.success = "Post Deleted Successfully";
     res.redirect("/posts");
   },
 };

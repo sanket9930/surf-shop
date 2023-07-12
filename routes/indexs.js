@@ -1,5 +1,8 @@
 const express = require('express');
-const { postRegister, postLogin, getLogout } = require('../controllers');
+const { 
+  postRegister, 
+  postLogin, 
+  getLogout } = require('../controllers');
 const { asyncErrorHandler } = require('../middleware');
 const router = express.Router();
 
