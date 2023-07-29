@@ -17,7 +17,11 @@ const PostSchema = new Schema({
     reviews : [{
         type : Schema.Types.ObjectId,
         ref : 'Review'
-    }]
+    }],
+    avgRating : {
+        type: Number, 
+        default: 0
+    }
 });
 
 PostSchema.pre('deleteOne', { document: true, query: false }, async function(){  //  Pre hook middleware - which will run whenever we deleteOne on a post 
@@ -27,6 +31,25 @@ PostSchema.pre('deleteOne', { document: true, query: false }, async function(){ 
         }
     })
 });
+
+PostSchema.methods.calculateAverageRating = function(){
+    let totalRating = 0;
+
+    if(this.reviews.length){
+        this.reviews.forEach(review => {
+            totalRating += review.rating;
+        });
+
+        this.avgRating = Math.round((totalRating/this.reviews.length)*10)/10;
+    }
+    else{
+        this.avgRating = totalRating;
+    }
+    const floorRating  = Math.floor(this.avgRating);
+
+    this.save();
+    return floorRating;
+}
 
 PostSchema.plugin(mongoosePaginate);
 

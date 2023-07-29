@@ -4,6 +4,7 @@ const passport = require('passport');
 
 //  it requires a database connection 
 module.exports = {
+    
     async postRegister(req,res,next){
         const newUser = {
             username: req.body.username,

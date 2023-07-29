@@ -4,6 +4,20 @@
 <div><%= post.description  %></div>
 <div><%= post.price %>$</div>
 <div><%= post.location  %></div>
+<div>
+    <% for( let i = 0; i < 5; i++ ) { %>
+        <% if( floorRating > i){ %>
+            <i class="fa-solid fa-star"></i>
+        <% } else if((post.avgRating - i) > 0 && (post.avgRating - i) < 1){ %>
+            <i class="fa-solid fa-star-half-stroke"></i>
+        <% } else { %>
+            <i class="fa-regular fa-star"></i>
+        <% } %>
+    <% } %>
+    <%= `${post.avgRating} star${(post.avgRating > 1) ? 's' : ''}` %>
+</div>
+
+
 <% post.images.forEach(function(image){ %>
     <img src="<%= image.url %>" alt="image" width="200px" height="100px">
     

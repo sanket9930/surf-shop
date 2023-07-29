@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const engine = require('ejs-mate');
 const createError = require('http-errors');
@@ -70,8 +71,12 @@ app.use((req, res, next) => {
 
     // '_id': '646c5e308ca95a3819e0cb75',
     // 'username': 'TadanoHito'
+
+    // '_id': '64aeb1fce77adf4b7873081c', 
+    // 'username': 'sanket2'
+    
   }
-  //  All the views uses current User property of req.locals to know the current User, so 
+  //  All the views uses current User property of res.locals to know the current User, so 
   res.locals.currentUser = req.user;
   res.locals.title = "Surf Shop";
   res.locals.success = req.session.success || '';

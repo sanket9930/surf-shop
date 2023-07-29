@@ -65,8 +65,10 @@ module.exports = {
         model: 'User'
       }
     });
+
+    const floorRating = post.calculateAverageRating();
     
-    res.render("posts/show", { post });
+    res.render("posts/show", { post, floorRating });
   },
 
   // Post Edit
@@ -131,7 +133,7 @@ module.exports = {
     //    save the updated post into the db
     post.save();
     //    redirect to show page of the post
-    req.session.success = "POst Updated Successfully";
+    req.session.success = "Post Updated Successfully";
     res.redirect(`/posts/${post.id}`);
   },
 
